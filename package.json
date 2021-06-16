@@ -1,0 +1,17 @@
+{
+  "name": "bilibili-topic",
+  "version": "1.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "nidhogg",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^3.2.0",
+    "axios": "^0.21.1",
+    "iconv-lite": "^0.6.3",
+    "moment": "^2.29.1"
+  }
+}
