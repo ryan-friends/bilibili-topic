@@ -1,6 +1,7 @@
+import { Config } from '@/common/interface';
 import { ipcMain } from 'electron';
-import { getConfig, saveConfig } from './lib/config';
-import download from './lib/download';
+import { getConfig, saveConfig } from './services/config';
+import download from './services/download';
 
 export default class Handler {
   private bindingEvents = {};
@@ -22,11 +23,13 @@ export default class Handler {
       }
     });
   }
-  getLastConfig(): { [key: string]: any } {
+  getLastConfig(): Config {
     return getConfig();
   }
-  async download(topic: string, start: string, target: string) {
-    saveConfig({ start, topic, target });
-    await download(start, topic, target);
+  async download(configStr: string) {
+    const config = JSON.parse(configStr);
+    console.log(config);
+    saveConfig(config);
+    await download(config);
   }
 }

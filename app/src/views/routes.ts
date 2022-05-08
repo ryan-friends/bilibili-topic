@@ -5,10 +5,10 @@ const routes: RouteConfig[] = [
     redirect: { to: '/main' },
     windowOptions: {
       title: 'bilibili topic',
-      width: 600,
-      height: 400,
-      minWidth: 420,
-      minHeight: 400,
+      width: 800,
+      height: 500,
+      minWidth: 600,
+      minHeight: 500,
     },
     createConfig: {
       showSidebar: false,

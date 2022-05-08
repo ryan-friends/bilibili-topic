@@ -18,8 +18,8 @@ export const DEFAULT_WINDOW_OPTIONS: BrowserWindowConstructorOptions = {
   icon: APP_ICON,
   minWidth: 420,
   minHeight: 200,
-  width: 800,
-  height: 400,
+  width: 900,
+  height: 500,
   show: false,
   hasShadow: true,
   webPreferences: {

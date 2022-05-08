@@ -1,6 +1,6 @@
 {
   "name": "bilibili-topic",
-  "version": "1.0.4",
+  "version": "2.0.0",
   "private": false,
   "main": "dist/main/main.js",
   "author": "nidhogg",
@@ -74,6 +74,7 @@
   "dependencies": {
     "async": "^3.2.0",
     "axios": "^0.21.1",
+    "axios-retry": "^3.2.4",
     "electron-store": "^8.0.0",
     "iconv-lite": "^0.6.3",
     "moment": "^2.29.1"

@@ -1,5 +1,7 @@
-import { Button, Form, Input, DatePicker, message, FormInstance } from 'antd';
+import { TopicSignalType } from '@/common/const';
+import { Button, Form, Input, DatePicker, message, FormInstance, Radio, Switch } from 'antd';
 import { ipcRenderer, remote, shell } from 'electron';
+import { Config } from 'electron/main';
 import fs from 'fs';
 import moment from 'moment';
 import React from 'react';
@@ -11,16 +13,16 @@ const getConfig = async () => {
   try {
     const result = await ipcRenderer.invoke('main-event', 'getLastConfig');
     return result;
-  } catch (err) {
+  } catch (err: any) {
     console.error(err);
     alert(err.message);
   }
 };
 
-const download = async (topic: string, start: moment.Moment, target: string) => {
+const download = async (config: Config) => {
   try {
-    await ipcRenderer.invoke('main-event', 'download', topic, start.format('YYYY-MM-DD'), target);
-  } catch (err) {
+    await ipcRenderer.invoke('main-event', 'download', JSON.stringify(config));
+  } catch (err: any) {
     console.error(err);
     alert(err.message);
   }
@@ -35,8 +37,10 @@ export default function Main() {
       .then((data) => {
         setData({
           topic: data.topic,
-          start: moment(data.start, 'YYYY-MM-DD'),
+          start: moment(data.start),
           target: data.target,
+          topicSignalType: data.topicSignalType,
+          isSplitDiffType: data.isSplitDiffType,
         });
         setIsShow(true);
       })
@@ -48,12 +52,13 @@ export default function Main() {
   const onFinish = async (values: any) => {
     const messageKey = `download-message-${key}`;
     key += 1;
+    values.start = values.start.startOf('day');
     message.loading({
       content: '下载中',
       duration: 0,
       key: messageKey,
     });
-    await download(values.topic, values.start, values.target);
+    await download(values);
     message.destroy(messageKey);
     message.info('下载完成');
   };
@@ -87,8 +92,15 @@ export default function Main() {
         width: '80%',
       }}
     >
-      <Form.Item label="话题ID" name="topic">
+      <Form.Item label="话题标识" name="topic">
         <Input placeholder="12736899" />
+      </Form.Item>
+      <Form.Item label="话题标识类型" name="topicSignalType">
+        <Radio.Group>
+          <Radio.Button value={TopicSignalType.TopicV1}>旧话题id</Radio.Button>
+          <Radio.Button value={TopicSignalType.TopicV2}>新话题id</Radio.Button>
+          {/* <Radio.Button value={TopicSignalType.TopicName}>话题名称</Radio.Button> */}
+        </Radio.Group>
       </Form.Item>
       <Form.Item label="时间范围">
         <Form.Item name="start" style={{ display: 'inline-block', width: 'calc(50% - 12px)' }}>
@@ -104,6 +116,9 @@ export default function Main() {
         </Form.Item>
         <Button onClick={onSetFolder}>设置目录</Button>
         <Button onClick={onOpenFolder}>打开目录</Button>
+      </Form.Item>
+      <Form.Item label="分离封面与图片" name="isSplitDiffType" valuePropName="checked">
+        <Switch />
       </Form.Item>
       <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
         <Button htmlType="submit">下载</Button>
